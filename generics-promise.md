@@ -1,7 +1,7 @@
 # How Generics Work in TypeScript and Why They Help with Promise<T>
 
 ## Introduction
-Generics let you write one piece of code that works with many types while keeping type safety. Think of a generic as a labeled box: the label (the type) is filled in later.
+Generics let we write one piece of code that works with many types while keeping type safety. Think of a generic as a labeled box whose label is filled in later. This matters a lot when we handle data that arrives asynchronously.
 
 ## How Generics Work
 ```ts
@@ -12,10 +12,10 @@ function wrap<T>(value: T): T[] {
 wrap(5);    // number[]
 wrap("hi"); // string[]
 ```
-`T` is a placeholder type. TypeScript infers it from the argument, so you reuse the function without falling back to `any`.
+Here, `T` is a placeholder type. TypeScript infers it from the argument, so `wrap(5)` returns `number[]`. Without generics, we would have to use `any` and lose autocomplete and error checking. Generics give us reuse without giving up safety.
 
 ## Generics and Promise<T>
-`Promise` is itself generic: `Promise<string>` means "a string, arriving later."
+`Promise` is itself generic, so `Promise<string>` means "a string that arrives later."
 ```ts
 interface User {
   id: number;
@@ -29,7 +29,7 @@ async function fetchData<T>(url: string): Promise<T> {
 
 const user = await fetchData<User>("/api/user");
 ```
-One function now serves every endpoint, and `user` is typed as `User`. Autocomplete works, and a typo like `user.nme` is caught at compile time.
+This one function can serve every endpoint in our app. When we call it with `<User>`, the result is typed as `User`. Autocomplete now works on `user.name`. A typo like `user.nme` is caught at compile time instead of crashing at runtime.
 
 ## Conclusion
-Generics give you reusable, type-safe code, and with `Promise<T>` they describe what async calls return. Remember that the type is a promise you make, so still validate data from untrusted APIs.
+Generics make our code reusable and type-safe. With `Promise<T>`, they describe exactly what an async call returns. Remember that the type is only a promise we make, so we should still validate data from untrusted APIs. Start using them early and our async code will be much easier to maintain.
